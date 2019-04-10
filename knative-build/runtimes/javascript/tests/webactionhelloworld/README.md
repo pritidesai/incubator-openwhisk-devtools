@@ -32,6 +32,27 @@ curl -H "Host: nodejs-web-action-helloworld.default.example.com" -X POST http://
 <html><body><h3>hello Joe</h3></body></html>
 ```
 
+#### Initialize the runtime
+
+You have an option to initialize the runtime with the function and other configuration data if its not initialized (i.e. built using [build-without-code.yaml.tmpl](build-without-code.yaml.tmpl))
+
+```
+curl -H "Host: nodejs-helloworld-with-params-from-env.default.example.com" -d "@knative-data-init.json" -H "Content-Type: application/json" http://localhost/
+
+{"OK":true}
+```
+
+#### Run the function
+
+Execute the function.
+
+```
+curl -H "Host: nodejs-helloworld-with-params-from-env.default.example.com" -d "@knative-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/
+
+<html><body><h3>hello Joe</h3></body></html>
+```
+
+
 ### Running with OW_RUNTIME_PLATFORM set to "openwhisk"
 
 #### Initialize the runtime
@@ -39,7 +60,7 @@ curl -H "Host: nodejs-web-action-helloworld.default.example.com" -X POST http://
 Initialize the runtime with the function and other configuration data using the ```/init``` endpoint.
 
 ```
-curl -H "Host: nodejs-web-aciton-helloworld.default.example.com" -d "@data-init.json" -H "Content-Type: application/json" http://localhost/init
+curl -H "Host: nodejs-web-aciton-helloworld.default.example.com" -d "@openwhisk-data-init.json" -H "Content-Type: application/json" http://localhost/init
 
 {"OK":true}
 ```
@@ -49,6 +70,6 @@ curl -H "Host: nodejs-web-aciton-helloworld.default.example.com" -d "@data-init.
 Execute the function using the ```/run``` endpoint.
 
 ```
-curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@data-run.json" -H "Content-Type: application/json" -X POST http://localhost/run
+curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@openwhisk-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/run
 <html><body><h3>hello Joe</h3></body></html>
 ```

@@ -17,7 +17,7 @@
 #
 -->
 
-# Hello World Web Action Test for OpenWhisk NodeJS Runtime using Knative
+# Web Action Test for OpenWhisk NodeJS Runtime using Knative
 
 ## Running the test using the "Curl" command
 
@@ -28,8 +28,8 @@ Depending on the value you set in [buildtemplate.yaml](../../buildtemplate.yaml)
 #### Invoke / endpoint on the Service
 
 ```
-curl -H "Host: nodejs-web-action-helloworld.default.example.com" -X POST http://localhost/
-<html><body><h3>hello Joe</h3></body></html>
+curl -H "Host: nodejs-web-action-httppredirect.default.example.com" -X POST http://localhost/
+{}
 ```
 
 #### Initialize the runtime
@@ -37,7 +37,7 @@ curl -H "Host: nodejs-web-action-helloworld.default.example.com" -X POST http://
 You have an option to initialize the runtime with the function and other configuration data if its not initialized (i.e. built using [build-without-code.yaml.tmpl](build-without-code.yaml.tmpl))
 
 ```
-curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@knative-data-init.json" -H "Content-Type: application/json" http://localhost/
+curl -H "Host: nodejs-web-action-httppredirect.default.example.com" -d "@knative-data-init.json" -H "Content-Type: application/json" http://localhost/
 
 {"OK":true}
 ```
@@ -47,9 +47,21 @@ curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@knative-da
 Execute the function.
 
 ```
-curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@knative-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/
+curl -H "Host: nodejs-web-action-httppredirect.default.example.com" -d "@knative-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/
 
-<html><body><h3>hello Joe</h3></body></html>
+HTTP/1.1 302 Found
+X-Powered-By: Express
+location: http://openwhisk.org
+Content-Type: application/json; charset=utf-8
+Access-Control-Allow-Origin: *
+Access-Control-Allow-Methods: OPTIONS, GET, DELETE, POST, PUT, HEAD, PATCH
+Access-Control-Allow-Headers: Authorization, Origin, X - Requested - With, Content - Type, Accept, User - Agent
+Content-Length: 2
+ETag: W/"2-vyGp6PvFo4RvsFtPoIWeCReyIC8"
+Date: Wed, 10 Apr 2019 19:56:19 GMT
+Connection: keep-alive
+
+{}
 ```
 
 
@@ -60,7 +72,7 @@ curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@knative-da
 Initialize the runtime with the function and other configuration data using the ```/init``` endpoint.
 
 ```
-curl -H "Host: nodejs-web-aciton-helloworld.default.example.com" -d "@openwhisk-data-init.json" -H "Content-Type: application/json" http://localhost/init
+curl -H "Host: nodejs-web-aciton-httppredirect.default.example.com" -d "@openwhisk-data-init.json" -H "Content-Type: application/json" http://localhost/init
 
 {"OK":true}
 ```
@@ -70,6 +82,9 @@ curl -H "Host: nodejs-web-aciton-helloworld.default.example.com" -d "@openwhisk-
 Execute the function using the ```/run``` endpoint.
 
 ```
-curl -H "Host: nodejs-web-action-helloworld.default.example.com" -d "@openwhisk-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/run
-<html><body><h3>hello Joe</h3></body></html>
+curl -H "Host: nodejs-web-action-httppredirect.default.example.com" -d "@openwhisk-data-run.json" -H "Content-Type: application/json" -X POST http://localhost/run
+
+{"headers":{"location":"http://openwhisk.org"},"statusCode":302}
 ```
+
+**Note**: OpenWhisk controller plays an important role in handling web actions and that's why returning the response with HTTP headers in body.

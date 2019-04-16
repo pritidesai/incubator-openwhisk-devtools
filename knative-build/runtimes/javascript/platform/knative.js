@@ -78,6 +78,50 @@ function removeInitData(body) {
     }
 }
 
+function readCode (code) {
+    try {
+        return require('fs').readFileSync(code, 'utf8');
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            // read from URL
+            /*
+                                const http = require('http');
+                                const https = require('https');
+                                let client = http;
+                                if (code.toString().indexOf("https") === 0) {
+                                    client = https;
+                                }
+                                var request = client.request(code, function (res) {
+                                    res.setEncoding('utf8');
+                                    var data = '';
+                                    res.on('data', function (chunk) {
+                                        data += chunk;
+                                    });
+                                    res.on('end', function() {
+                                        code = data;
+                                        console.log("******")
+                                        console.log(code)
+                                    })
+                                }).on('error', function (e) {
+                                    console.log(e.message);
+                                });
+                                request.end();
+                                */
+            const request = require('request');
+            request(code, function (err, res, body) {
+                if (err) { return console.log(err); }
+                console.log("+++++++")
+                console.log(res.body);
+                setTimeout(function () {5});
+                code = res.body;
+                return res.body;
+            });
+        } else {
+            throw e;
+        }
+    }
+}
+
 /**
  * Pre-process the incoming
  */
@@ -125,6 +169,13 @@ function preProcessInitData(env, initdata, valuedata, activationdata) {
                     throw ("Invalid Init. data; expected boolean for key 'raw'.");
                 }
             }
+        }
+
+        // code could be a valid action code or a file path on local file system or
+        // link to a file with code in GitHub repo
+        if (code) {
+            code = readCode(code);
+
         }
 
         // Move the init data to the request body under the "value" key.

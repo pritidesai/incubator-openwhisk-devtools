@@ -265,10 +265,13 @@ function preProcessActivationData(env, activationdata) {
 function marshalResources(initData, valueData) {
     DEBUG.functionStart();
     try {
+        DEBUG.dumpObject("Starting to marshal","Starting to marshal","Starting to marshal")
         // check if url is set and assigned some string value
         if (typeof initData.url === "string" && initData.url !== undefined) {
+            DEBUG.dumpObject("Inside check if url is not empty","Inside check if url is not empty","Inside check if url is not empty")
             const fs = require('fs');
             if (fs.existsSync(initData.url)) {
+                DEBUG.dumpObject("url exists", "url exists", "url exists")
                 const stats = fs.lstatSync(initData.url);
                 // check if specified url is an existing directory
                 if (stats.isDirectory()) {
